@@ -1,11 +1,17 @@
 class NotesModel {
-  final int? id;
+  int? id;
   final String title;
   final int age;
   final String description;
   final String email;
 
   NotesModel(
+      {required this.title,
+      required this.age,
+      required this.description,
+      required this.email});
+
+  NotesModel.withID(
       {this.id,
       required this.title,
       required this.age,
@@ -21,7 +27,7 @@ class NotesModel {
         email = n['email'];
 
 //Converting class objects into MAP objects===========================
-  Map<String, Object?> toMap() {
+  Map<String, dynamic> toMap() {
     return {
       'id': id,
       'title': title,
