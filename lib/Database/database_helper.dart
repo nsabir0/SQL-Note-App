@@ -39,7 +39,7 @@ class DatabaseHelper {
   Future<List<NotesModel>> getNotesList() async {
     var dbClient = await checkDB;
 
-    final List<Map<String, Object?>> queryResult =
+    final List<Map<String, dynamic>> queryResult =
         await dbClient!.query('notes');
     return queryResult.map((e) => NotesModel.fromMap(e)).toList();
   }

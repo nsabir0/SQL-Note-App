@@ -11,7 +11,7 @@ class MyNotes extends StatefulWidget {
 
 class _MyNotesState extends State<MyNotes> {
   DatabaseHelper? DBhelper;
-  late Future<List<NotesModel>> notesList;
+  List<NotesModel>? notesList;
 
   @override
   void initState() {
@@ -21,7 +21,7 @@ class _MyNotesState extends State<MyNotes> {
   }
 
   loadData() async {
-    notesList = DBhelper!.getNotesList();
+    notesList = await DBhelper!.getNotesList();
   }
 
   @override
@@ -35,24 +35,20 @@ class _MyNotesState extends State<MyNotes> {
           const SizedBox(
             height: 20,
           ),
+          if (notesList!.isNotEmpty)
           Expanded(
-            child: FutureBuilder(
-                future: notesList,
-                builder: (context, AsyncSnapshot<List<NotesModel>> snapshot) {
-                  return ListView.builder(
-                    itemCount: snapshot.data?.length,
-                    itemBuilder: (context, index) {
-                      return Card(
-                        child: ListTile(
-                          title: Text(snapshot.data![index].title.toString()),
-                          subtitle: Text(
-                              snapshot.data![index].description.toString()),
-                          trailing: Text(snapshot.data![index].age.toString()),
-                        ),
-                      );
-                    },
-                  );
-                }),
+            child: ListView.builder(
+              itemCount: notesList!.length,
+              itemBuilder: (context, index) {
+                return Card(
+                  child: ListTile(
+                    title: Text(notesList![index].title.toString()),
+                    subtitle: Text(notesList![index].description.toString()),
+                    trailing: Text(notesList![index].age.toString()),
+                  ),
+                );
+              },
+            ),
           )
         ],
       ),
@@ -68,8 +64,8 @@ class _MyNotesState extends State<MyNotes> {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                       content: Text('DATA SAVED'),
                     )),
-                    setState(() {
-                      notesList = DBhelper!.getNotesList();
+                    setState(() async {
+                      notesList = await DBhelper!.getNotesList();
                     })
                   });
         },
